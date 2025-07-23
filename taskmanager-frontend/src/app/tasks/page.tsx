@@ -19,9 +19,14 @@ export default function TaskPage() {
   const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
     const fetchTasks = async () => {
       try {
-        const token = localStorage.getItem('token');
         const res = await fetch('http://localhost:8080/tasks/', {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -34,7 +39,6 @@ export default function TaskPage() {
         }
 
         const data = await res.json();
-        console.log('Fetched tasks:', data);
         setTasks(data);
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -46,21 +50,34 @@ export default function TaskPage() {
     };
 
     fetchTasks();
-  }, []);
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/login');
+  };
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#E186B4] to-[#BDD8FE] p-6 text-black">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Task List</h1>
-        <button
-          onClick={() => router.push('/tasks/new')}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          + Create
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => router.push('/tasks/new')}
+            className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition"
+          >
+            + Add Task
+          </button>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 border border-black text-black rounded hover:bg-white/20 transition"
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-red-600">{error}</p>}
       <div className="space-y-4">
         {tasks.map((task) => (
           <TaskCard key={task.ID} task={task} />

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+    "fmt"
+    "reflect" 
     "net/http"
     "github.com/gin-gonic/gin"
     "taskmanager-backend/config"
@@ -9,10 +11,15 @@ import (
 
 func CreateTask(c *gin.Context) {
     var input models.Task
+    
     if err := c.ShouldBindJSON(&input); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
+    fmt.Println("AssigneeID to be sent:", input.AssigneeID)
+    fmt.Println("AssigneeID (type):", reflect.TypeOf(input.AssigneeID))
+    fmt.Println("Assignee (nested):", input.Assignee)
+
 
     // Default status jika kosong
     if input.Status == "" {
@@ -29,13 +36,14 @@ func CreateTask(c *gin.Context) {
 
 func GetTasks(c *gin.Context) {
     var tasks []models.Task
-    if err := config.DB.Find(&tasks).Error; err != nil {
+    if err := config.DB.Preload("Assignee").Find(&tasks).Error; err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch tasks"})
         return
     }
-
     c.JSON(http.StatusOK, tasks)
 }
+
+
 
 func UpdateTask(c *gin.Context) {
     id := c.Param("id")
@@ -82,11 +90,10 @@ func GetTaskByID(c *gin.Context) {
     id := c.Param("id")
 
     var task models.Task
-    if err := config.DB.First(&task, id).Error; err != nil {
+    if err := config.DB.Preload("Assignee").First(&task, id).Error; err != nil {
         c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
         return
     }
 
     c.JSON(http.StatusOK, task)
 }
-

@@ -8,8 +8,9 @@ type Task struct {
     ID          uint      `gorm:"primaryKey"`
     Title       string    `gorm:"not null"`
     Description string
-    Status      string    `gorm:"type:varchar(20);default:'Todo'"` // Todo, In Progress, Done
+    Status      string    `gorm:"type:varchar(20);default:'Todo'"`
     Deadline    time.Time
-    AssigneeID  uint
-    UserID      uint      `gorm:"not null"`
+    AssigneeID  uint      `json:"assignee_id"` // ✅ WAJIB ADA
+    Assignee    *User     `gorm:"foreignKey:AssigneeID"` // relasi (opsional tapi disarankan)
 }
+

@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 export default function RegisterPage() {
   const router = useRouter();
 
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState(''); 
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -20,7 +21,7 @@ export default function RegisterPage() {
       const res = await fetch('http://localhost:8080/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       if (!res.ok) {
@@ -37,25 +38,35 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-10 p-6 border rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
-      {error && <p className="text-red-500 mb-2">{error}</p>}
-      {success && <p className="text-green-600 mb-2">{success}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#E186B4] to-[#BDD8FE]">
+      <form
+        onSubmit={handleRegister}
+        className="bg-white p-6 rounded shadow-md w-80 space-y-4"
+      >
+        <h2 className="text-2xl font-bold text-center text-gray-700">Register</h2>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {success && <p className="text-green-600 text-sm">{success}</p>}
 
-      <form onSubmit={handleRegister} className="space-y-4">
         <input
           type="text"
-          placeholder="Username"
-          className="w-full border p-2 rounded"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Name"
+          className="w-full px-3 py-2 rounded border border-[#E186B4] placeholder-gray-500 text-gray-700 focus:outline-none"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
         />
-
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full px-3 py-2 rounded border border-[#E186B4] placeholder-gray-500 text-gray-700 focus:outline-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
         <input
           type="password"
           placeholder="Password"
-          className="w-full border p-2 rounded"
+          className="w-full px-3 py-2 rounded border border-[#E186B4] placeholder-gray-500 text-gray-700 focus:outline-none"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -63,7 +74,7 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
+          className="w-full bg-black text-white py-2 rounded hover:opacity-90 transition"
         >
           Register
         </button>

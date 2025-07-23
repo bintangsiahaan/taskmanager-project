@@ -12,10 +12,10 @@ export default function EditTaskPage() {
   const [status, setStatus] = useState('Todo');
   const [deadline, setDeadline] = useState('');
   const [assigneeID, setAssigneeID] = useState('');
+  const [users, setUsers] = useState<{ id: number; name: string; email: string }[]>([]);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true); // loader
+  const [loading, setLoading] = useState(true);
 
-  // Format deadline string ke datetime-local input (YYYY-MM-DDTHH:MM)
   const formatDatetime = (value?: string) => {
     if (!value || value.length < 10) return '';
     const fullValue = value.length === 10 ? `${value}T00:00:00Z` : value;
@@ -27,37 +27,52 @@ export default function EditTaskPage() {
   };
 
   useEffect(() => {
-  const fetchTask = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:8080/tasks/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const fetchTask = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`http://localhost:8080/tasks/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!res.ok) throw new Error('Failed to fetch task');
-      const task = await res.json();
+        if (!res.ok) throw new Error('Failed to fetch task');
+        const task = await res.json();
 
-      console.log('Task fetched:', task); // debug log
+        setTitle(task.Title || '');
+        setDescription(task.Description || '');
+        setStatus(task.Status || 'Todo');
+        setDeadline(formatDatetime(task.Deadline));
+        setAssigneeID(task.AssigneeID?.toString() || '');
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Unexpected error');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      // Gunakan field sesuai respons backend
-      setTitle(task.Title || '');
-      setDescription(task.Description || '');
-      setStatus(task.Status || 'Todo');
-      setDeadline(formatDatetime(task.Deadline)); // datetime
-      setAssigneeID(task.AssigneeID?.toString() || '');
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Unexpected error');
-    } finally {
-      setLoading(false); // ✅ pastikan loading selesai
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:8080/users/', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error('Failed to fetch users');
+        const data = await res.json();
+        setUsers(data);
+      } catch (err) {
+        console.error('Failed to fetch users:', err);
+      }
+    };
+
+    if (id) {
+      fetchTask();
+      fetchUsers();
     }
-  };
-
-  if (id) fetchTask();
-}, [id]);
-
-
+  }, [id]);
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,70 +103,77 @@ export default function EditTaskPage() {
   };
 
   if (loading) {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Edit Task</h1>
-      <p>Loading task...</p>
-    </div>
-  );
-}
-
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#E186B4] to-[#BDD8FE] flex items-center justify-center text-black">
+        <p>Loading task...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-4 border rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Edit Task</h1>
-      {error && <p className="text-red-500 mb-2">{error}</p>}
+    <div className="min-h-screen bg-gradient-to-br from-[#E186B4] to-[#BDD8FE] flex items-center justify-center text-black">
+      <div className="bg-white p-6 rounded shadow w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-4">Edit Task</h1>
+        {error && <p className="text-red-500 mb-2">{error}</p>}
 
-      <form onSubmit={handleUpdate} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Title"
-          className="w-full border p-2 rounded"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
+        <form onSubmit={handleUpdate} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Title"
+            className="w-full border border-black p-2 rounded placeholder-gray-500"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
 
-        <textarea
-          placeholder="Description"
-          className="w-full border p-2 rounded"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
+          <textarea
+            placeholder="Description"
+            className="w-full border border-black p-2 rounded placeholder-gray-500"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
 
-        <select
-          className="w-full border p-2 rounded"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        >
-          <option value="Todo">Todo</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
-        </select>
+          <select
+            className="w-full border border-black p-2 rounded text-black"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="Todo">Todo</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Done">Done</option>
+          </select>
 
-        <input
-          type="datetime-local"
-          className="w-full border p-2 rounded"
-          value={deadline}
-          onChange={(e) => setDeadline(e.target.value)}
-        />
+          <input
+            type="datetime-local"
+            className="w-full border border-black p-2 rounded"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+            required
+          />
 
-        <input
-          type="number"
-          placeholder="Assignee ID"
-          className="w-full border p-2 rounded"
-          value={assigneeID}
-          onChange={(e) => setAssigneeID(e.target.value)}
-        />
+          <select
+            className="w-full border border-black p-2 rounded text-black"
+            value={assigneeID}
+            onChange={(e) => setAssigneeID(e.target.value)}
+            required
+          >
+            <option value="">Select Assignee</option>
+            {users.map((user) => (
+              <option key={user.id} value={String(user.id)}>
+                {user.name}
+              </option>
+            ))}
+          </select>
 
-        <button
-          type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          Update Task
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-2 rounded hover:opacity-90 transition"
+          >
+            Update Task
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
