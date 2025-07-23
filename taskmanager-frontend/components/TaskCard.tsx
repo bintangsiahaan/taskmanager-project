@@ -104,8 +104,9 @@ export default function TaskCard({ task }: { task: Task }) {
     <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm border border-gray-300">
       <h2 className="text-xl font-bold mb-3">Confirm Delete</h2>
       <p className="mb-5 text-gray-700">
-        Are you sure you want to delete <strong>"{task.Title}"</strong>?
+       Are you sure you want to delete <strong>&quot;{task.Title}&quot;</strong>?
       </p>
+
       <div className="flex justify-end gap-3">
         <button
           onClick={() => setShowConfirmModal(false)}

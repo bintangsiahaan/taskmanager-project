@@ -85,8 +85,8 @@ export default function LoginPage() {
           Login
         </button>
 
-        <div className="text-center text-sm text-gray-600 mt-4">
-          Don't have an account?{' '}
+<div className="text-center text-sm text-gray-600 mt-4">
+  Don&apos;t have an account?{' '}        
           <button
             type="button"
             className="text-blue-600 hover:underline"
