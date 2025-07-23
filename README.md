@@ -71,6 +71,10 @@ npm run dev
 
 Frontend will run at: `http://localhost:3000`
 
+Account
+- email: bintang@mail.com
+- password: password123
+
 ## Features
 
 * Register & Login (JWT Auth)
