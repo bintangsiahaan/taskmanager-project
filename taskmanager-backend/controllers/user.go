@@ -15,7 +15,6 @@ func GetUsers(c *gin.Context) {
         return
     }
 
-    // Biar lebih clean (tanpa password)
     var response []gin.H
     for _, user := range users {
         response = append(response, gin.H{

@@ -120,7 +120,7 @@ export default function EditTaskPage() {
           <input
             type="text"
             placeholder="Title"
-            className="w-full border border-black p-2 rounded placeholder-gray-500"
+            className="w-full px-3 py-2 rounded border border-[#E186B4] placeholder-gray-500 text-gray-700 focus:outline-none"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -128,14 +128,14 @@ export default function EditTaskPage() {
 
           <textarea
             placeholder="Description"
-            className="w-full border border-black p-2 rounded placeholder-gray-500"
+            className="w-full px-3 py-2 rounded border border-[#E186B4] placeholder-gray-500 text-gray-700 focus:outline-none"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
           />
 
           <select
-            className="w-full border border-black p-2 rounded text-black"
+            className="w-full px-3 py-2 rounded border border-[#E186B4] placeholder-gray-500 text-gray-700 focus:outline-none"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
@@ -146,14 +146,14 @@ export default function EditTaskPage() {
 
           <input
             type="datetime-local"
-            className="w-full border border-black p-2 rounded"
+            className="w-full px-3 py-2 rounded border border-[#E186B4] placeholder-gray-500 text-gray-700 focus:outline-none"
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
             required
           />
 
           <select
-            className="w-full border border-black p-2 rounded text-black"
+            className="w-full px-3 py-2 rounded border border-[#E186B4] placeholder-gray-500 text-gray-700 focus:outline-none"
             value={assigneeID}
             onChange={(e) => setAssigneeID(e.target.value)}
             required

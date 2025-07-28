@@ -12,7 +12,7 @@ import (
     "taskmanager-backend/models"
 )
 
-var jwtKey = []byte("secret-key") // Ganti jadi secret yang lebih aman
+var jwtKey = []byte("s3cr3tk3y")
 
 type Claims struct {
     UserID uint

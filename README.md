@@ -17,7 +17,7 @@ A simple fullstack Task Management web app built with **Go (Golang)** for the ba
 ### 1. Clone the Repository
 
 ```bash
-[git clone https://github.com/your-username/taskmanager-project.git](https://github.com/bintangsiahaan/taskmanager-project.git)
+git clone https://github.com/bintangsiahaan/taskmanager-project.git
 cd taskmanager-project
 ```
 
@@ -25,22 +25,6 @@ cd taskmanager-project
 
 ```bash
 cd taskmanager-backend
-```
-
-#### Create PostgreSQL Database
-Access `psql` and create the user and database:
-
-```sql
--- Access psql
-psql -U postgres
-
--- Create user & database
-CREATE USER taskmanager WITH PASSWORD 'taskmanager';
-CREATE DATABASE taskmanager OWNER taskmanager;
-
--- Optional: Create schema
-\c taskmanager
-CREATE SCHEMA taskschema;
 ```
 
 #### Run the Backend
@@ -54,7 +38,7 @@ Backend will run at: `http://localhost:8080`
 ### 3. Setup the Frontend
 
 ```bash
-cd ../taskmanager-frontend
+cd taskmanager-frontend
 ```
 
 #### Install Dependencies

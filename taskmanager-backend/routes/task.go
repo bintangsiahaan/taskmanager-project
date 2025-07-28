@@ -11,7 +11,8 @@ func TaskRoutes(r *gin.Engine) {
     task.Use(middleware.AuthMiddleware())
     {
         task.GET("/", controllers.GetTasks)
-        task.GET("/:id", controllers.GetTaskByID) // ✅ Tambahkan ini
+        task.GET("/statistics", controllers.GetTaskStatistics)
+        task.GET("/:id", controllers.GetTaskByID) 
         task.POST("/", controllers.CreateTask)
         task.PUT("/:id", controllers.UpdateTask)
         task.DELETE("/:id", controllers.DeleteTask)

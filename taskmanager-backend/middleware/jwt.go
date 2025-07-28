@@ -22,7 +22,7 @@ func AuthMiddleware() gin.HandlerFunc {
         claims := &controllers.Claims{}
 
         token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-            return []byte("secret-key"), nil
+            return []byte("s3cr3tk3y"), nil
         })
 
         if err != nil || !token.Valid {
@@ -31,7 +31,6 @@ func AuthMiddleware() gin.HandlerFunc {
             return
         }
 
-        // ✅ Simpan UserID ke context
         c.Set("user_id", claims.UserID)
         c.Next()
     }
